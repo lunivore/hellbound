@@ -1,0 +1,127 @@
+group 'lunivore.com'
+version '0.0.3-20170516'
+
+buildscript {
+    ext.kotlinVersion = '1.1.2'
+    ext.junitVersion  = '4.12'
+    ext.log4jVersion = '2.8.2'
+    ext.mockitoVersion = '1.10.19'
+    ext.reactFxVersion = '1.4.1'
+    ext.tornadoFxVersion = '1.7.10'
+    ext.guiceVersion = '4.0'
+    ext.openCsvVersion = '3.9'
+    ext.stirryVersion = '0.2.1-20170825'
+    ext.cucumberJava8Version = '2.0.0-SNAPSHOT'
+    ext.cucumberPicocontainerVersion = '2.0.0-SNAPSHOT'
+    ext.cucumberJUnitVersion = '2.0.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+sourceSets {
+    scenarios {
+        kotlin {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/scenarios/kotlin')
+            resources.srcDirs = ["src/scenarios/resources"]
+        }
+    }
+}
+
+//// Using Stirry from Github for scenarios
+//
+// I would love to use an Ivy patterned repository instead. Unfortunately Ivy calls HEAD,
+// which causes Github to return a 403 error "Forbidden". Copying it to a local lib directory
+// is the next best thing. Maybe one day Stirry will be releasable too.
+////
+clean {
+    delete("libs")
+}
+task("copyStirry") {
+    if(!file("libs").exists()) { file("libs").mkdir() }
+    if(!file("libs/stirry-${stirryVersion}.jar").exists()) {
+        ant.get(src: "http://github.com/lunivore/Stirry/releases/download/$stirryVersion/stirry-${stirryVersion}.jar",
+                dest: "libs",
+                skipexisting: true)
+    }
+}
+scenariosClasses.dependsOn("copyStirry")
+// End using Stirry from Github
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "com.opencsv:opencsv:$openCsvVersion"
+    compile "org.reactfx:reactfx:$reactFxVersion"
+    compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    compile "no.tornado:tornadofx:$tornadoFxVersion"
+    compile "com.google.inject:guice:$guiceVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-all:$mockitoVersion"
+    testRuntime "junit:junit:$junitVersion"
+
+    scenariosCompile "junit:junit:$junitVersion"
+    scenariosCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    scenariosCompile "com.opencsv:opencsv:$openCsvVersion"
+    scenariosCompile "org.reactfx:reactfx:$reactFxVersion"
+    scenariosCompile "com.lunivore.stirry:stirry:$stirryVersion"
+    scenariosCompile "io.cucumber:cucumber-junit:$cucumberJUnitVersion"
+    scenariosCompile "io.cucumber:cucumber-java8:$cucumberJava8Version"
+    scenariosCompile "io.cucumber:cucumber-picocontainer:$cucumberPicocontainerVersion"
+    scenariosCompile "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    scenariosCompile "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    scenariosCompile "no.tornado:tornadofx:$tornadoFxVersion"
+    scenariosCompile "com.google.inject:guice:$guiceVersion"
+
+    scenariosRuntime "junit:junit:$junitVersion"
+    scenariosRuntime "com.lunivore.stirry:stirry:$stirryVersion"
+}
+
+jar {
+    from {
+        configurations.runtime.collect { it.isDirectory()? it : zipTree(it) }
+    }{
+        exclude "META-INF/*.*"
+        exclude "META-INF/maven/**"
+
+        // I can't work out why these appear in my jar in the first place.
+        // They don't appear in my dependency tree.
+        exclude "org/intellij/**"
+        exclude "org/jetbrains/**"
+    }
+    from('.') {
+        include 'LICENSE*.txt'
+    }
+    manifest {
+        attributes 'Main-Class': 'com.lunivore.montecarluni.Montecarluni'
+    }
+}
