@@ -1,13 +1,14 @@
 package com.lunivore.hellbound.app
 
 import javafx.geometry.Insets
-import javafx.scene.Parent
+import javafx.geometry.Pos
+import javafx.scene.control.Tab
+import javafx.scene.control.TabPane
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
 import tornadofx.*
-import javax.swing.border.Border
 
 class MainView : View() {
 
@@ -18,19 +19,36 @@ class MainView : View() {
     private val gridHeight: Int = 20
     private val gridWidth: Int = 10
     private val gridScale: Double = 40.0
+
+    private var gameTabPane : TabPane by singleAssign()
+    private var gameTab : Tab by singleAssign()
+
     override val root = tabpane {
+        gameTabPane = this
         tab {
             borderpane() {
-                top {
-                    label("Welcome to Hellbound!")
+                center {
+                    vbox {
+                        alignment = Pos.CENTER
+                        label("Welcome to Hellbound!")
+                        button("New Game") {
+                            action {
+                                gameTabPane.selectionModel.select(gameTab)
+                            }
+                        }
+                    }
                 }
             }
         }
         tab {
+            gameTab = this
             borderpane() {
                 top {
-                    label {text = "SCORE:" }
-                    label {}
+                    hbox {
+                        label {
+                            text = "SCORE:"
+                        }
+                    }
                 }
                 center {
                     pane {
