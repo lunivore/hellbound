@@ -1,27 +1,26 @@
 package com.lunivore.hellbound.app
 
-import javafx.geometry.Insets
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
 import tornadofx.*
+import java.util.*
+
 
 class MainView : View() {
+
+    private val gridVM = GridViewModel()
 
     init {
         title = "Hellbound!"
     }
 
-    private val gridHeight: Int = 20
-    private val gridWidth: Int = 10
-    private val gridScale: Double = 40.0
-
     private var gameTabPane : TabPane by singleAssign()
     private var gameTab : Tab by singleAssign()
+
 
     override val root = tabpane {
         gameTabPane = this
@@ -51,25 +50,12 @@ class MainView : View() {
                     }
                 }
                 center {
-                    pane {
-                        val blackFill = BackgroundFill(Color.BLACK, CornerRadii(0.0), Insets(0.0))
-                        background = Background(blackFill)
-                        canvas(gridWidth * gridScale, gridHeight * gridScale) {
-                            with(graphicsContext2D) {
-                                stroke = Color.LIGHTGRAY
-                                lineWidth = 2.0
-                                for (coli in 0..gridWidth) strokeLine(
-                                    coli * gridScale,
-                                    0.0,
-                                    coli * gridScale,
-                                    gridHeight * gridScale
-                                )
-                                for (rowi in 0..gridHeight) strokeLine(
-                                    0.0,
-                                    rowi * gridScale,
-                                    gridWidth * gridScale,
-                                    rowi * gridScale
-                                )
+                    stackpane {
+                        group {
+                            bindChildren(gridVM.squares) {
+                                rectangle(it.x, it.y, it.scale, it.scale) {
+                                    fill = it.color
+                                }
                             }
                         }
                     }
@@ -77,4 +63,25 @@ class MainView : View() {
             }
         }
     }
+}
+
+class   GridViewModel {
+    private val gridHeight: Int = 20
+    private val gridWidth: Int = 10
+    private val gridScale: Double = 40.0
+    val squares: ObservableList<Square> = FXCollections.observableArrayList()
+
+    init {
+        val random = Random(3L)
+        for (coli in 0..gridWidth) {
+            for (rowi in 0..gridHeight) {
+                squares.add(Square(coli, rowi, gridScale, listOf(Color.BLACK, Color.BLUE, Color.RED, Color.YELLOW)[random.nextInt(4)]))
+            }
+        }
+    }
+}
+
+data class Square(val col : Int, val row : Int, val scale : Double, val color : Color) {
+    val x = col * scale
+    val y = row * scale
 }
