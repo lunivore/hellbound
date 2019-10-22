@@ -10,6 +10,7 @@ buildscript {
     ext.tornadoFxVersion = '1.7.10'
     ext.guiceVersion = '4.0'
     ext.stirryVersion = '0.2.1-20170825'
+    ext.hamkrestVersion = '1.7.0.0'
 
     repositories {
         mavenCentral()
@@ -82,9 +83,11 @@ dependencies {
 
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-all:$mockitoVersion"
+    testCompile "com.natpryce:hamkrest:$hamkrestVersion"
     testRuntime "junit:junit:$junitVersion"
 
     scenariosCompile "junit:junit:$junitVersion"
+    scenariosCompile "com.natpryce:hamkrest:$hamkrestVersion"
     scenariosCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     scenariosCompile "org.reactfx:reactfx:$reactFxVersion"
     scenariosCompile "com.lunivore.stirry:stirry:$stirryVersion"
