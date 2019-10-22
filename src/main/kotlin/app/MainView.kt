@@ -7,7 +7,6 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.paint.Color
 import tornadofx.*
-import java.util.*
 
 
 class MainView : View() {
@@ -31,6 +30,7 @@ class MainView : View() {
                         alignment = Pos.CENTER
                         label("Welcome to Hellbound!")
                         button("New Game") {
+                            id = "newGameButton"
                             action {
                                 gameTabPane.selectionModel.select(gameTab)
                             }
@@ -52,6 +52,7 @@ class MainView : View() {
                 center {
                     stackpane {
                         group {
+                            id = "gameGrid"
                             bindChildren(gridVM.squares) {
                                 rectangle(it.x, it.y, it.scale, it.scale) {
                                     fill = it.color
@@ -72,10 +73,9 @@ class   GridViewModel {
     val squares: ObservableList<Square> = FXCollections.observableArrayList()
 
     init {
-        val random = Random(3L)
         for (coli in 0..gridWidth) {
             for (rowi in 0..gridHeight) {
-                squares.add(Square(coli, rowi, gridScale, listOf(Color.BLACK, Color.BLUE, Color.RED, Color.YELLOW)[random.nextInt(4)]))
+                squares.add(Square(coli, rowi, gridScale, Color.BLACK))
             }
         }
     }
