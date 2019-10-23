@@ -9,7 +9,8 @@ abstract class Scenario {
     protected val nl = System.lineSeparator()
 
     protected fun makeNewGameReady(): Group {
-        Stirry.findInRoot<Button> { it.id == "newGameButton" }.value.fire()
+        val button = Stirry.findInRoot<Button> { it.id == "newGameButton" }.value
+        Stirry.runOnPlatform {button.fire()}
         val gameGrid = Stirry.findInRoot<Group> { it.id == "gameGrid" }.value
         return gameGrid
     }
