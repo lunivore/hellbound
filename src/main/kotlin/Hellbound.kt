@@ -1,6 +1,7 @@
 package com.lunivore.hellbound
 
 import com.google.inject.Guice
+import com.google.inject.Injector
 import com.lunivore.hellbound.app.MainView
 import com.lunivore.hellbound.app.Styles
 import javafx.application.Application
@@ -9,10 +10,11 @@ import org.apache.logging.log4j.LogManager
 import tornadofx.*
 import kotlin.reflect.KClass
 
-class Hellbound: App(MainView::class, Styles::class) {
+class Hellbound(val guice : Injector): App(MainView::class, Styles::class) {
+
+    constructor() : this(Guice.createInjector(InjectorModule()))
 
     override fun start(stage: Stage) {
-        val guice = Guice.createInjector(InjectorModule())
 
         FX.dicontainer = object : DIContainer {
             override fun <T : Any> getInstance(type: KClass<T>) = guice.getInstance(type.java)

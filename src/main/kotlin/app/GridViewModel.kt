@@ -12,8 +12,8 @@ class   GridViewModel {
         FXCollections.observableArrayList()
 
     init {
-        for (coli in 0..gridWidth) {
-            for (rowi in 0..gridHeight) {
+        for (rowi in 0..gridHeight) {
+            for (coli in 0..gridWidth) {
                 squares.add(Square(coli, rowi, gridScale, Color.BLACK))
             }
         }
