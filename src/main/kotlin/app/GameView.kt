@@ -6,7 +6,11 @@ import tornadofx.*
 class GameView : View() {
 
     private val gridVM = GridViewModel()
+
+    
+
     override val root = borderpane() {
+        id = "gameView"
         top {
             hbox {
                 label {

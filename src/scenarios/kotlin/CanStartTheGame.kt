@@ -1,5 +1,6 @@
 package com.lunivore.hellbound
 
+import com.google.inject.Guice
 import com.lunivore.hellbound.com.lunivore.hellbound.Scenario
 import com.lunivore.stirry.Stirry
 import com.natpryce.hamkrest.assertion.assertThat
@@ -7,6 +8,7 @@ import com.natpryce.hamkrest.equalTo
 import javafx.scene.Group
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
@@ -21,7 +23,9 @@ class CanStartTheGame : Scenario() {
     @Before
     fun `Starting Stirry`() {
         Stirry.initialize()
-        val hellbound = Hellbound()
+        val fixedSeed = 42L
+        val injector = Guice.createInjector(InjectorModule(fixedSeed))
+        val hellbound = Hellbound(injector)
         Stirry.launchApp(hellbound)
     }
 
@@ -46,16 +50,20 @@ class CanStartTheGame : Scenario() {
     @Test
     fun `Pressing a key should start the game`() {
         val gameGrid = makeNewGameReady()
-        Stirry.findRoot().fireEvent(KeyEvent(KeyEvent.KEY_RELEASED,
-            KeyCode.A.toString(), KeyCode.A.toString(),
-            KeyCode.A, false, false, false, false))
+        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
+        Stirry.runOnPlatform {
+            gameView.fireEvent(KeyEvent(KeyEvent.KEY_PRESSED,
+                KeyCode.A.toString(), KeyCode.A.toString(),
+                KeyCode.A, false, false, false, false))
+        }
 
-        assertThat(convertGridToString(gameGrid), equalTo(nl + """
-            ....TTT....
-            .....T.....
+        val expectedGrid = nl + """
+            ....XXX....
+            .....X.....
             ...........
             """.trimIndent() +
-                (1..20).map {nl + "..........." }.joinToString("") + nl))
+                (1..18).map { nl + "..........." }.joinToString("") + nl
+        assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
     }
 
     private fun convertGridToString(actualGrid: Group): String {

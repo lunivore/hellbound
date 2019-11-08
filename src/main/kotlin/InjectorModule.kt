@@ -1,15 +1,25 @@
 package com.lunivore.hellbound
 
 import com.google.inject.AbstractModule
-import com.lunivore.hellbound.engine.GameStarter
+import com.lunivore.hellbound.com.lunivore.hellbound.engine.SinglePlayerGame
+import com.lunivore.hellbound.engine.Controller
+import com.lunivore.hellbound.engine.GameFactory
 
-class InjectorModule : AbstractModule() {
+class InjectorModule(val seed : Long = System.currentTimeMillis()) : AbstractModule() {
     override fun configure() {
         val events = Events()
-        bind(Events::class.java).toInstance(events)
-        bind(GameSize::class.java).toInstance(GameSize())
+        val gameSize = GameSize()
+        val gameFactory = object : GameFactory {
+            override fun create(): SinglePlayerGame = SinglePlayerGame(events, gameSize, seed)
+        }
 
-        val gameStarter = GameStarter(events)
+        bind(Events::class.java).toInstance(events)
+
+        bind(GameSize::class.java).toInstance(gameSize)
+
+        // Don't delete this unused instance! Or the garbage collector
+        // will delete the engine too!
+        val controller = Controller(events, gameFactory)
     }
 }
 

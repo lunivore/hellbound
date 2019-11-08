@@ -6,7 +6,7 @@ import javafx.scene.control.Button
 
 abstract class Scenario {
 
-    protected val nl = System.lineSeparator()
+    protected val nl = "\n"
 
     protected fun makeNewGameReady(): Group {
         val button = Stirry.findInRoot<Button> { it.id == "newGameButton" }.value

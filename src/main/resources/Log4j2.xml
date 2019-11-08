@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" name="Montecarluni" packages="">
+<Configuration status="warn" name="Hellbound" packages="">
     <Appenders>
         <Console name="stdout" target="SYSTEM_OUT">
             <PatternLayout pattern="%m%n"/>
@@ -9,6 +9,6 @@
         <Root level="Error">
             <AppenderRef ref="stdout"/>
         </Root>
-        <Logger name="com.lunivore.hellbound" level="error"/>
+        <Logger name="com.lunivore.hellbound" level="debug"/>
     </Loggers>
 </Configuration>

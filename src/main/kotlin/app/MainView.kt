@@ -3,6 +3,7 @@ package com.lunivore.hellbound.app
 import com.lunivore.hellbound.Events
 import com.lunivore.hellbound.com.lunivore.hellbound.app.FrontView
 import com.lunivore.hellbound.com.lunivore.hellbound.app.GameView
+import javafx.scene.input.KeyEvent
 import tornadofx.*
 
 
@@ -16,11 +17,16 @@ class MainView : View() {
 
     init {
         title = "Hellbound!"
-        events.gameStartNotification.subscribe { frontView.root.toBack() }
+        events.gameReadyNotification.subscribe {
+            frontView.root.toBack()
+            gameView.root.requestFocus()
+        }
+
 
     }
 
     override val root = stackpane {
+        addEventFilter(KeyEvent.KEY_PRESSED) { events.keyPressNotification.push(it.code) }
         children.add(gameView.root)
         children.add(frontView.root)
     }
