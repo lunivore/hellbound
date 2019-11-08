@@ -10,6 +10,7 @@ import tornadofx.*
 class MainView : View() {
 
     val events : Events by di()
+    val keycodeTranslator : KeycodeTranslator by di()
 
     private val gameView = find(GameView::class)
     private val frontView = find(FrontView::class)
@@ -26,7 +27,7 @@ class MainView : View() {
     }
 
     override val root = stackpane {
-        addEventFilter(KeyEvent.KEY_PRESSED) { events.keyPressNotification.push(it.code) }
+        addEventFilter(KeyEvent.KEY_PRESSED) { events.playerMoveRequest.push(keycodeTranslator.translate(it.code)) }
         children.add(gameView.root)
         children.add(frontView.root)
     }

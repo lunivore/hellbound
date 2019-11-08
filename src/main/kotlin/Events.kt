@@ -1,7 +1,7 @@
 package com.lunivore.hellbound
 
 import com.lunivore.hellbound.engine.glyph.Segments
-import javafx.scene.input.KeyCode
+import com.lunivore.hellbound.model.PlayerMove
 import org.apache.logging.log4j.LogManager
 import org.reactfx.EventSource
 
@@ -14,13 +14,13 @@ class Events {
     val gamePlayingNotification = EventSource<Any>()
     val gameReadyRequest = EventSource<Any>()
     val gameReadyNotification = EventSource<Any>()
-    val keyPressNotification = EventSource<KeyCode>()
+    val playerMoveRequest = EventSource<PlayerMove>()
 
     init {
         gridChangedNotification.subscribe { logger.info("Notification: Grid changed") }
         gamePlayingNotification.subscribe { logger.info("Notification: Game playing") }
         gameReadyRequest.subscribe { logger.info("Request: Game ready") }
         gameReadyNotification.subscribe { logger.info("Notification: Game ready") }
-        keyPressNotification.subscribe { logger.info("Notification: Key pressed - ${it.name}") }
+        playerMoveRequest.subscribe { logger.info("Notification: Key pressed - ${it.name}") }
     }
 }

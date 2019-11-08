@@ -1,10 +1,9 @@
 package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.com.lunivore.hellbound.engine.Game
+import com.lunivore.hellbound.model.PlayerMove
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import javafx.scene.input.KeyCode
 import org.junit.Test
 import org.mockito.Mockito.*
 
@@ -42,8 +41,8 @@ class ControllerTest {
         val controller = Controller(events, object : GameFactory { override fun create(): Game = game })
         events.gameReadyRequest.push(Object())
 
-        // When the controller receives a keycode
-        events.keyPressNotification.push(KeyCode.A)
+        // When the controller receives any keycode
+        events.playerMoveRequest.push(PlayerMove.UNMAPPED)
 
         // Then it should start the game playing and notify us
         assertThat(playingNotificationReceived, equalTo(true))
@@ -61,13 +60,13 @@ class ControllerTest {
         val game = mock(Game::class.java)
         val controller = Controller(events, object : GameFactory { override fun create(): Game = game })
         events.gameReadyRequest.push(Object())
-        events.keyPressNotification.push(KeyCode.A) // First keypress starts the game playing
+        events.playerMoveRequest.push(PlayerMove.UNMAPPED) // First keypress starts the game playing
 
         // When the controller receives another keypress
-        events.keyPressNotification.push(KeyCode.S)
+        events.playerMoveRequest.push(PlayerMove.DROP)
 
         // Then it should pass it on to the game
-        verify(game, times(1)).keyPressed(KeyCode.S)
+        verify(game, times(1)).move(PlayerMove.DROP)
     }
 
     @Test
@@ -84,7 +83,7 @@ class ControllerTest {
         val controller = Controller(events, object : GameFactory { override fun create(): Game = game })
 
         // When we send a keycode and it's still on the welcome screen
-        events.keyPressNotification.push(KeyCode.A)
+        events.playerMoveRequest.push(PlayerMove.UNMAPPED)
 
         // Then the game should not be started
         verify(game, never()).startPlaying()

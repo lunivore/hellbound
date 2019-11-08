@@ -1,4 +1,4 @@
-package com.lunivore.hellbound.com.lunivore.hellbound
+package com.lunivore.hellbound
 
 import com.lunivore.stirry.Stirry
 import javafx.scene.Group

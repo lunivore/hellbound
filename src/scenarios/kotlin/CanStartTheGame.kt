@@ -1,7 +1,6 @@
 package com.lunivore.hellbound
 
 import com.google.inject.Guice
-import com.lunivore.hellbound.com.lunivore.hellbound.Scenario
 import com.lunivore.stirry.Stirry
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo

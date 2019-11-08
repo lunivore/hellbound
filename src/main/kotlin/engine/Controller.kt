@@ -1,8 +1,7 @@
 package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.com.lunivore.hellbound.engine.Game
-import javafx.scene.input.KeyCode
+import com.lunivore.hellbound.model.PlayerMove
 
 interface GameFactory {
     fun create(): Game
@@ -18,7 +17,7 @@ class Controller(events: Events, gameFactory: GameFactory) {
     }
 
     var READY: State = object : DefaultState() {
-        override fun keyPress(keyCode: KeyCode) {
+        override fun move(playerMove: PlayerMove) {
             events.gamePlayingNotification.push(Object())
             game.startPlaying()
             state = PLAYING
@@ -26,8 +25,8 @@ class Controller(events: Events, gameFactory: GameFactory) {
     }
 
     var PLAYING: State = object : DefaultState() {
-        override fun keyPress(keyCode: KeyCode) {
-            game.keyPressed(keyCode)
+        override fun move(playerMove: PlayerMove) {
+            game.move(playerMove)
         }
     }
 
@@ -36,8 +35,8 @@ class Controller(events: Events, gameFactory: GameFactory) {
 
     init {
         events.gameReadyRequest.subscribe {state.getReady()}
-        events.keyPressNotification.subscribe {
-            state.keyPress(it)
+        events.playerMoveRequest.subscribe {
+            state.move(it)
         }
     }
 

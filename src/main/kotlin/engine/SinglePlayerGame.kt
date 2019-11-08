@@ -1,15 +1,15 @@
-package com.lunivore.hellbound.com.lunivore.hellbound.engine
+package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.Events
 import com.lunivore.hellbound.GameSize
 import com.lunivore.hellbound.engine.glyph.Segment
 import com.lunivore.hellbound.engine.glyph.TetrominoRotations
-import javafx.scene.input.KeyCode
+import com.lunivore.hellbound.model.PlayerMove
 import java.util.*
 
 interface Game {
     fun startPlaying()
-    fun keyPressed(code: KeyCode)
+    fun move(direction: PlayerMove)
 }
 
 class SinglePlayerGame(
@@ -17,7 +17,7 @@ class SinglePlayerGame(
     gameSize: GameSize,
     seed: Long = System.currentTimeMillis()
 ) : Game {
-    override fun keyPressed(code: KeyCode) {
+    override fun move(direction: PlayerMove) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

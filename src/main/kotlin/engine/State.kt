@@ -1,11 +1,11 @@
 package com.lunivore.hellbound.engine
 
-import javafx.scene.input.KeyCode
+import com.lunivore.hellbound.model.PlayerMove
 import org.apache.logging.log4j.LogManager
 
 interface State {
     fun getReady()
-    fun keyPress(keyCode: KeyCode)
+    fun move(playerMove: PlayerMove)
 }
 
 abstract class DefaultState() : State {
@@ -15,7 +15,7 @@ abstract class DefaultState() : State {
 
 
     override fun getReady() {}
-    override fun keyPress(keyCode: KeyCode) {}
+    override fun move(playerMove: PlayerMove) {}
 }
 
 
