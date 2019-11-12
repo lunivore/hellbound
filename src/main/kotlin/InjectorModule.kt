@@ -5,9 +5,15 @@ import com.lunivore.hellbound.app.KeycodeTranslator
 import com.lunivore.hellbound.engine.Controller
 import com.lunivore.hellbound.engine.GameFactory
 import com.lunivore.hellbound.engine.SinglePlayerGame
+import com.lunivore.hellbound.model.GameSize
 
 class InjectorModule(val seed : Long = System.currentTimeMillis()) : AbstractModule() {
+    companion object {
+        val logger = org.apache.logging.log4j.LogManager.getLogger()
+    }
+
     override fun configure() {
+        logger.info("Configuring Injector")
         val events = Events()
         val gameSize = GameSize()
         val keycodeTranslator = KeycodeTranslator()
@@ -25,5 +31,3 @@ class InjectorModule(val seed : Long = System.currentTimeMillis()) : AbstractMod
         val controller = Controller(events, gameFactory)
     }
 }
-
-data class GameSize(val gridHeight: Int = 20, val gridWidth: Int = 10,val gridScale: Double = 40.0)

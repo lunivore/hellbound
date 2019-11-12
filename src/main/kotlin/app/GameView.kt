@@ -1,13 +1,12 @@
 package com.lunivore.hellbound.com.lunivore.hellbound.app
 
 import com.lunivore.hellbound.app.GridViewModel
+import org.apache.logging.log4j.LogManager
 import tornadofx.*
 
 class GameView : View() {
 
     private val gridVM = GridViewModel()
-
-    
 
     override val root = borderpane() {
         id = "gameView"
