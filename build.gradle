@@ -3,6 +3,7 @@ version '0.0.3-20170516'
 
 buildscript {
     ext.kotlinVersion = '1.3.41'
+    ext.coroutinesVersion = '1.3.2'
     ext.junitVersion  = '4.12'
     ext.log4jVersion = '2.8.2'
     ext.mockitoVersion = '1.10.19'
@@ -78,13 +79,17 @@ dependencies {
     compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
     compile "no.tornado:tornadofx:$tornadoFxVersion"
     compile "com.google.inject:guice:$guiceVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
 
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-all:$mockitoVersion"
     testCompile "com.natpryce:hamkrest:$hamkrestVersion"
+    testCompile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     testRuntime "junit:junit:$junitVersion"
 
     scenariosCompile "junit:junit:$junitVersion"
+    scenariosCompile "org.mockito:mockito-all:$mockitoVersion"
     scenariosCompile "com.natpryce:hamkrest:$hamkrestVersion"
     scenariosCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     scenariosCompile "org.reactfx:reactfx:$reactFxVersion"
@@ -93,6 +98,8 @@ dependencies {
     scenariosCompile "org.apache.logging.log4j:log4j-core:$log4jVersion"
     scenariosCompile "no.tornado:tornadofx:$tornadoFxVersion"
     scenariosCompile "com.google.inject:guice:$guiceVersion"
+    scenariosCompile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    scenariosCompile "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
 
     scenariosRuntime "junit:junit:$junitVersion"
     scenariosRuntime "com.lunivore.stirry:stirry:$stirryVersion"

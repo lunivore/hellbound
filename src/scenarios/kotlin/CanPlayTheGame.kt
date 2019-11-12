@@ -1,6 +1,7 @@
 package com.lunivore.hellbound
 
 import com.google.inject.Guice
+import com.lunivore.hellbound.engine.Heartbeat
 import com.lunivore.hellbound.model.GameSize
 import com.lunivore.stirry.Stirry
 import com.natpryce.hamkrest.assertion.assertThat
@@ -17,15 +18,19 @@ import javafx.scene.shape.Rectangle
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.mock
 
 class CanPlayTheGame : Scenario() {
+
+    private val events: Events = Events()
 
     @Before
     fun `Starting Stirry`() {
         System.out.println("Starting Stirry")
         Stirry.initialize()
         val fixedSeed = 42L
-        val injector = Guice.createInjector(InjectorModule(fixedSeed))
+        val unusedBecauseWeFakeTheHeartbeat = mock(Heartbeat::class.java)
+        val injector = Guice.createInjector(InjectorModule(fixedSeed, events, unusedBecauseWeFakeTheHeartbeat))
         val hellbound = Hellbound(injector)
         Stirry.launchApp(hellbound)
     }
@@ -78,6 +83,8 @@ class CanPlayTheGame : Scenario() {
 
     @Test
     fun `ASDQE should move and rotate the shape`() {
+
+        // NOTE: We don't need to test all the keys here; this is just an example.
         // Given a game that's just started
         val gameGrid = makeNewGameReady()
         val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
@@ -96,8 +103,27 @@ class CanPlayTheGame : Scenario() {
             """
         val expectedGrid = appendEmptyGridRows(expectedTopOfGrid)
         assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
+    }
 
-        // NOTE: We don't need to test all the keys here; this is just an example.
+    @Test
+    fun `should move shape down on heartbeat`() {
+        // Given a game that's just started
+        val gameGrid = makeNewGameReady()
+        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
+        pressKey(gameView, KeyCode.R)
+
+        // When the heart beats
+        Stirry.runOnPlatform { events.heartbeatNotification.push(Object()) }
+
+        // Then the initial T-shape should be moved down
+        val expectedTopOfGrid =
+            """
+            ...........
+            ....XXX....
+            .....X.....
+            """
+        val expectedGrid = appendEmptyGridRows(expectedTopOfGrid)
+        assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
     }
 
     private fun pressKey(origin: Node, key: KeyCode) {

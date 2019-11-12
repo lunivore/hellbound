@@ -76,8 +76,10 @@ class ControllerTest {
         val events = Events()
         var readyNotificationReceived = false
         var playingNotificationReceived = false
+        var gridChangeNotificationReceived = false
         events.gameReadyNotification.subscribe { readyNotificationReceived = true }
         events.gamePlayingNotification.subscribe { playingNotificationReceived = true }
+        events.gridChangedNotification.subscribe { gridChangeNotificationReceived = true }
 
         // And a controller which will start a game eventually
         val game = mock(Game::class.java)
@@ -86,11 +88,16 @@ class ControllerTest {
         // When we send a keycode and it's still on the welcome screen
         events.playerMoveRequest.push(PlayerMove.UNMAPPED)
 
-        // Then the game should not be started
+        // Or we send a heartbeat
+        events.heartbeatNotification.push(Object())
+
+        // Then the game should not be started nor have received any heartbeats
         verify(game, never()).startPlaying()
+        verify(game, never()).heartbeat()
 
         // And we shouldn't have received any notification of readiness or playing
         assertThat(readyNotificationReceived, equalTo(false))
         assertThat(playingNotificationReceived, equalTo(false))
+        assertThat(gridChangeNotificationReceived, equalTo(false))
     }
 }

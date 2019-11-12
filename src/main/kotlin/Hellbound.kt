@@ -7,7 +7,10 @@ import com.lunivore.hellbound.app.Styles
 import javafx.application.Application
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
-import tornadofx.*
+import tornadofx.App
+import tornadofx.DIContainer
+import tornadofx.FX
+import tornadofx.Scope
 import kotlin.reflect.KClass
 
 class Hellbound(val guice : Injector): App(MainView::class, Styles::class, Scope()) {

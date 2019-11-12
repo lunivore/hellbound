@@ -5,7 +5,8 @@ import com.lunivore.hellbound.com.lunivore.hellbound.app.FrontView
 import com.lunivore.hellbound.com.lunivore.hellbound.app.GameView
 import javafx.scene.input.KeyEvent
 import org.apache.logging.log4j.LogManager
-import tornadofx.*
+import tornadofx.View
+import tornadofx.stackpane
 
 
 class MainView : View() {
@@ -28,8 +29,6 @@ class MainView : View() {
             frontView.root.toBack()
             gameView.root.requestFocus()
         }
-
-
     }
 
     override val root = stackpane {
