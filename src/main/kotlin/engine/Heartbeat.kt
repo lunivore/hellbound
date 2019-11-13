@@ -15,28 +15,41 @@ class AcceleratingHeartbeat(
     private val coroutineScope: CoroutineScope
 ) : Heartbeat {
 
+    private var shouldInterrupt : (PlayerMove) -> Unit = {}
+
     private var currentBeat: Job = GlobalScope.launch {}
     private var timeBetweenBeats: Long = initialTimeBetweenBeats
-    private var beating = true
+    private var debugInc = 0
 
     init {
         events.gamePlayingNotification.subscribe {
+            currentBeat.cancel()
             start()
+            shouldInterrupt = ::interruptHeartbeatOnDropOrDown
         }
         events.gameOverNotification.subscribe {
             currentBeat.cancel()
+            shouldInterrupt = {}
             timeBetweenBeats = initialTimeBetweenBeats
         }
         events.playerMoveRequest.subscribe {
-            if (it == PlayerMove.DOWN) {
-                currentBeat.cancel()
-                start()
-            }
+            getInterruptState()(it)
+        }
+    }
+
+    private fun getInterruptState(): (PlayerMove) -> Unit {
+        return shouldInterrupt
+    }
+
+    private fun interruptHeartbeatOnDropOrDown(it: PlayerMove) {
+        if (it == PlayerMove.DOWN || it == PlayerMove.DROP) {
+            currentBeat.cancel()
+            start()
         }
     }
 
     override fun start() {
-        currentBeat = coroutineScope.launch {
+        currentBeat = GlobalScope.launch(Dispatchers.Main) {
             while(isActive && timeBetweenBeats > 0) {
                 delay(timeBetweenBeats)
                 if(isActive) {

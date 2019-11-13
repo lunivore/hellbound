@@ -80,7 +80,6 @@ class CanPlayTheGame : Scenario() {
         assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
     }
 
-
     @Test
     fun `ASDQE should move and rotate the shape`() {
 
@@ -106,7 +105,7 @@ class CanPlayTheGame : Scenario() {
     }
 
     @Test
-    fun `should move shape down on heartbeat`() {
+    fun `The shape should move down on heartbeat`() {
         // Given a game that's just started
         val gameGrid = makeNewGameReady()
         val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
@@ -125,6 +124,22 @@ class CanPlayTheGame : Scenario() {
         val expectedGrid = appendEmptyGridRows(expectedTopOfGrid)
         assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
     }
+
+    @Test
+    fun `If the shape collides with the bottom or another shape it should become junk`() {
+        // Given a game that's just started
+        val gameGrid = makeNewGameReady()
+        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
+        pressKey(gameView, KeyCode.R)
+
+        // When we drop the shape, then drop the next shape
+        pressKey(gameView, KeyCode.SPACE)
+        pressKey(gameView, KeyCode.SPACE)
+
+        // Then they should fall to the bottom and the next shape should appear
+        assertThat(convertGridToString(gameGrid), equalTo(""))
+    }
+
 
     private fun pressKey(origin: Node, key: KeyCode) {
         Stirry.runOnPlatform {

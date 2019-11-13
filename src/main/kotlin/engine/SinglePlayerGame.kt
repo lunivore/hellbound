@@ -20,9 +20,9 @@ interface Game {
 }
 
 class SinglePlayerGame(
-    val events: Events,
-    gameSize: GameSize,
-    seed: Long = System.currentTimeMillis()
+    private val events: Events,
+    private val gameSize: GameSize,
+    private val seed: Long = System.currentTimeMillis()
 ) : Game {
 
     override fun heartbeat() {
@@ -46,9 +46,19 @@ class SinglePlayerGame(
             PlayerMove.DOWN -> tetromino.movedDown()
             PlayerMove.CLOCKWISE -> tetromino.turnedClockwise()
             PlayerMove.WIDDERSHINS -> tetromino.turnedWiddershins()
-            PlayerMove.DROP -> TODO()
+            PlayerMove.DROP -> drop()
             PlayerMove.UNMAPPED -> tetromino
         }
         if(move != PlayerMove.UNMAPPED) events.gridChangedNotification.push(listOf(tetromino))
+    }
+
+    private fun drop(): Tetromino {
+        var currentTetromino = tetromino
+        var candidateTetromino = currentTetromino.movedDown()
+        while (candidateTetromino.none { it.isOutOfBounds(gameSize) }) {
+            currentTetromino = candidateTetromino
+            candidateTetromino = candidateTetromino.movedDown()
+        }
+        return currentTetromino
     }
 }

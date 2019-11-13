@@ -1,28 +1,27 @@
 package com.lunivore.hellbound.engine.glyph
 
-data class Segment(val x: Int, val y: Int) {
+import com.lunivore.hellbound.model.GameSize
+import com.lunivore.hellbound.model.Position
 
-    fun movedDown(): Segment {
-        return Segment(x, y + 1)
-    }
 
-    fun movedDown(offset: Int): Segment {
-        return Segment(x, y + offset)
-    }
+/** A segment has both a position and a type, so that it can show up in different colours. **/
+data class Segment(val position : Position) {
 
-    fun movedLeft(): Segment {
-        return Segment(x - 1, y)
-    }
+    constructor(col: Int, row: Int) : this(Position(col, row))
+    private val col = position.col
+    private val row = position.row
 
-    fun movedRight(): Segment {
-        return movedRight(1)
-    }
+    fun movedDown(): Segment = copy(position.down)
 
-    fun movedRight(offset: Int): Segment {
-        return Segment(x + offset, y)
-    }
+    fun movedDown(offset: Int): Segment = Segment(col, row + offset)
 
-    fun describe(): String {
-        return "($x,$y)"
-    }
+    fun movedLeft(): Segment = copy(position.left)
+
+    fun movedRight(): Segment = copy(position.right)
+
+    fun movedRight(offset: Int): Segment = Segment(col + offset, row)
+
+    fun describe(): String = "($col,$row)"
+
+    fun isOutOfBounds(gameSize: GameSize): Boolean = position.isOutOfBounds(gameSize)
 }
