@@ -2,7 +2,7 @@ package com.lunivore.hellbound.model
 
 data class Position(val col : Int, val row : Int) {
     fun isOutOfBounds(gameSize: GameSize): Boolean {
-        val colOut = col < 0 || col >= gameSize.cols
+        val colOut = col < 0 || col > gameSize.cols
         val rowOut = row > gameSize.rows
         return colOut || rowOut
     }

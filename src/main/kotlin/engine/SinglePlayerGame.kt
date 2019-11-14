@@ -1,11 +1,10 @@
 package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.engine.glyph.Tetromino
-import com.lunivore.hellbound.engine.glyph.TetrominoType
 import com.lunivore.hellbound.model.GameSize
 import com.lunivore.hellbound.model.PlayerMove
 import com.lunivore.hellbound.model.Position
+import com.lunivore.hellbound.model.Segment
 import java.util.*
 
 /**
@@ -25,22 +24,36 @@ class SinglePlayerGame(
     private val seed: Long = System.currentTimeMillis()
 ) : Game {
 
-    override fun heartbeat() {
-        move(PlayerMove.DOWN)
-    }
+    private var junk = listOf<Segment>()
 
     private val random = Random(seed)
     private var nextType = TetrominoType.values()[random.nextInt(TetrominoType.values().size)]
     private lateinit var tetromino : Tetromino
     private val translation = Position(gameSize.cols / 2, 0)
 
+    override fun heartbeat() {
+        var candidateTetromino = tetromino.movedDown()
+        if (candidateTetromino.any { it.isOutOfBounds(gameSize) || junk.contains(it) }) {
+            junk = junk.plus(tetromino)
+            nextTetromino()
+        } else {
+            move(PlayerMove.DOWN)
+        }
+    }
+
     override fun startPlaying() {
         tetromino = Tetromino(nextType, translation)
-        events.gridChangedNotification.push(listOf(tetromino))
+        events.gridChangedNotification.push(tetromino)
+    }
+
+    private fun nextTetromino() {
+        nextType = TetrominoType.values()[random.nextInt(TetrominoType.values().size)]
+        tetromino = Tetromino(nextType, translation)
+        events.gridChangedNotification.push(tetromino.plus(junk))
     }
 
     override fun move(move: PlayerMove) {
-        tetromino = when(move) {
+        var candidateTetromino = when(move) {
             PlayerMove.RIGHT -> tetromino.movedRight()
             PlayerMove.LEFT -> tetromino.movedLeft()
             PlayerMove.DOWN -> tetromino.movedDown()
@@ -49,13 +62,24 @@ class SinglePlayerGame(
             PlayerMove.DROP -> drop()
             PlayerMove.UNMAPPED -> tetromino
         }
-        if(move != PlayerMove.UNMAPPED) events.gridChangedNotification.push(listOf(tetromino))
+        if (candidateTetromino.none { it.isOutOfBounds(gameSize)  || junk.contains(it) }) {
+            tetromino = candidateTetromino
+            events.gridChangedNotification.push(tetromino.plus(junk))
+        }
+    }
+
+    private fun moveDown(): Tetromino {
+        var candidateTetromino = tetromino.movedDown()
+        if (candidateTetromino.none { it.isOutOfBounds(gameSize)  || junk.contains(it) }) {
+            candidateTetromino = candidateTetromino.movedDown()
+        }
+        return candidateTetromino
     }
 
     private fun drop(): Tetromino {
         var currentTetromino = tetromino
         var candidateTetromino = currentTetromino.movedDown()
-        while (candidateTetromino.none { it.isOutOfBounds(gameSize) }) {
+        while (candidateTetromino.none { it.isOutOfBounds(gameSize) || junk.contains(it) }) {
             currentTetromino = candidateTetromino
             candidateTetromino = candidateTetromino.movedDown()
         }

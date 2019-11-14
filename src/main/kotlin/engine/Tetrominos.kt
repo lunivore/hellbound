@@ -1,12 +1,21 @@
-package com.lunivore.hellbound.engine.glyph
+package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.model.Position
+import com.lunivore.hellbound.model.Segment
 
 private fun rotation(x1: Int, y1: Int, x2: Int, y2: Int, x3: Int, y3: Int, x4: Int, y4: Int): TetrominoRotation {
-    return TetrominoRotation(listOf(p(x1, y1), p(x2, y2), p(x3, y3), p(x4, y4)))
+    return TetrominoRotation(
+        listOf(
+            p(x1, y1),
+            p(x2, y2),
+            p(x3, y3),
+            p(x4, y4)
+        )
+    )
 }
 
-private fun p(x: Int, y: Int): Segment { return Segment(x, y) }
+private fun p(x: Int, y: Int): Segment { return Segment(x, y)
+}
 
 enum class TetrominoType(val tetrominoRotations: List<TetrominoRotation>, val ascii: Char) : List<TetrominoRotation> by tetrominoRotations {
 

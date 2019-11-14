@@ -1,8 +1,8 @@
 package com.lunivore.hellbound.app
 
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.engine.glyph.Segment
 import com.lunivore.hellbound.model.GameSize
+import com.lunivore.hellbound.model.Position
 import com.lunivore.hellbound.model.Scale
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -23,10 +23,10 @@ class   GridViewModel : ViewModel() {
         }
 
         events.gridChangedNotification.subscribe {
-            val allSegments = it.flatMap { it }
+            val allPositions = it.map { it.position }
 
             squares.replaceAll {
-                val color = if (allSegments.contains(Segment(it.col, it.row))) Color.RED else Color.BLACK
+                val color = if (allPositions.contains(Position(it.col, it.row))) Color.RED else Color.BLACK
                 Square(it.col, it.row, scale.value, color)
             }
         }

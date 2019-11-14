@@ -1,8 +1,8 @@
 package com.lunivore.hellbound
 
-import com.lunivore.hellbound.engine.glyph.Tetromino
 import com.lunivore.hellbound.model.GameSize
 import com.lunivore.hellbound.model.PlayerMove
+import com.lunivore.hellbound.model.Segment
 import org.apache.logging.log4j.LogManager
 import org.reactfx.EventSource
 
@@ -11,7 +11,7 @@ class Events {
     val logger = LogManager.getLogger()
 
 
-    val gridChangedNotification = EventSource<List<Tetromino>>()
+    val gridChangedNotification = EventSource<List<Segment>>()
 
     val gamePlayingNotification = EventSource<Any>()
     val gameReadyRequest = EventSource<GameSize>()
