@@ -48,9 +48,9 @@ enum class TetrominoType(val tetrominoRotations: List<TetrominoRotation>, val as
     J(
         listOf(
             rotation(0, 0, 0, 1, 0, 2, -1, 2),
-            rotation(-1, 0, -1, 1, 0, 1, 1, 1),
+            rotation(-1, 0, 0, 0, 1, 0, 1, 1),
             rotation(-1, 2, -1, 1, -1, 0, 0, 0),
-            rotation(-1, 0, 0, 0, 1, 0, 1, 1)
+            rotation(-1, 0, -1, 1, 0, 1, 1, 1)
         ),
         'J'),
     L(

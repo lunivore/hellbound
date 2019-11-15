@@ -35,9 +35,20 @@ class SinglePlayerGame(
         var candidateTetromino = tetromino.movedDown()
         if (candidateTetromino.any { it.isOutOfBounds(gameSize) || junk.contains(it) }) {
             junk = junk.plus(tetromino)
+            checkForNewLine()
             nextTetromino()
         } else {
             move(PlayerMove.DOWN)
+        }
+    }
+
+    private fun checkForNewLine() {
+        val junkLines = junk.groupBy { it.position.row }.values
+        val rowsToDelete : List<Int> = junkLines.filter { it.size > gameSize.cols }.map { it.first().row }.sorted()
+        for(line in rowsToDelete) {
+            val aboveLine = junk.filter { it.position.row < line } // Remembering 0 is at the top
+            val belowLine = junk.filter { it.position.row > line }
+            junk = aboveLine.map {it.movedDown()}.plus(belowLine)
         }
     }
 

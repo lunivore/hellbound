@@ -5,8 +5,8 @@ package com.lunivore.hellbound.model
 data class Segment(val position : Position) {
 
     constructor(col: Int, row: Int) : this(Position(col, row))
-    private val col = position.col
-    private val row = position.row
+    val col = position.col
+    val row = position.row
 
     fun movedDown(): Segment = copy(position.down)
 
