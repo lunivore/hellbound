@@ -1,8 +1,8 @@
 package com.lunivore.hellbound.app
 
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.com.lunivore.hellbound.app.FrontView
 import com.lunivore.hellbound.com.lunivore.hellbound.app.GameView
+import com.lunivore.hellbound.com.lunivore.hellbound.app.WelcomeView
 import javafx.scene.input.KeyEvent
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
@@ -15,7 +15,7 @@ class MainView : View() {
     val keycodeTranslator : KeycodeTranslator by di()
 
     private val gameView = find(GameView::class)
-    private val frontView = find(FrontView::class)
+    private val frontView = find(WelcomeView::class)
 
 
     companion object {
@@ -28,6 +28,10 @@ class MainView : View() {
         events.gameReadyNotification.subscribe {
             frontView.root.toBack()
             gameView.root.requestFocus()
+        }
+        events.showWelcomeNotification.subscribe {
+            frontView.root.toFront()
+            frontView.root.requestFocus()
         }
     }
 

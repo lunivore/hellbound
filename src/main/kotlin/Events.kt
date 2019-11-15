@@ -19,6 +19,7 @@ class Events {
     val playerMoveRequest = EventSource<PlayerMove>()
     val heartbeatNotification = EventSource<Any>()
     val gameOverNotification = EventSource<Any>()
+    val showWelcomeNotification = EventSource<Any>()
 
     init {
         gridChangedNotification.subscribe { logger.info("Notification: Grid changed") }
@@ -28,5 +29,7 @@ class Events {
         playerMoveRequest.subscribe { logger.info("Request: Player move - ${it.name}") }
         heartbeatNotification.subscribe { logger.info("Notification: Heartbeat") }
         gameOverNotification.subscribe { logger.info("Notification: Game over") }
+        showWelcomeNotification.subscribe { logger.info("Notification: Returning to Welcome screen") }
+
     }
 }

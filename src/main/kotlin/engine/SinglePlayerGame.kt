@@ -37,8 +37,15 @@ class SinglePlayerGame(
             junk = junk.plus(tetromino)
             checkForNewLine()
             nextTetromino()
+            checkForGameOver()
         } else {
             move(PlayerMove.DOWN)
+        }
+    }
+
+    private fun checkForGameOver() {
+        if (junk.any { tetromino.contains(it)}) {
+            events.gameOverNotification.push(Object())
         }
     }
 
@@ -77,14 +84,6 @@ class SinglePlayerGame(
             tetromino = candidateTetromino
             events.gridChangedNotification.push(tetromino.plus(junk))
         }
-    }
-
-    private fun moveDown(): Tetromino {
-        var candidateTetromino = tetromino.movedDown()
-        if (candidateTetromino.none { it.isOutOfBounds(gameSize)  || junk.contains(it) }) {
-            candidateTetromino = candidateTetromino.movedDown()
-        }
-        return candidateTetromino
     }
 
     private fun drop(): Tetromino {

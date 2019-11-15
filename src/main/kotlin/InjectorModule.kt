@@ -10,7 +10,7 @@ import kotlinx.coroutines.javafx.JavaFx
 import kotlin.coroutines.CoroutineContext
 
 class InjectorModule(
-    val seed: Long = System.currentTimeMillis(),
+    val seed: Long = 42,//System.currentTimeMillis(),
     val events: Events = Events(),
     val heartbeat: Heartbeat = AcceleratingHeartbeat(events, 1000, 1, createCoroutineScope())
 ) : AbstractModule() {

@@ -10,10 +10,11 @@ import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
 import tornadofx.*
 
-class FrontView : View(){
+class WelcomeView : View(){
     val events : Events by di()
 
     override val root = borderpane {
+        id = "welcomeView"
         useMaxWidth = true
         useMaxHeight = true
         background = Background(BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY))

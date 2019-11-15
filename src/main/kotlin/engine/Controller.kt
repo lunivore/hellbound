@@ -38,6 +38,13 @@ class Controller(events: Events, gameFactory: GameFactory) {
         }
     }
 
+    var OVER: State = object : DefaultState() {
+        override fun move(playerMove: PlayerMove) {
+            events.showWelcomeNotification.push(Object())
+            state = WELCOME
+        }
+    }
+
     private var state = WELCOME
     private var game: Game = gameFactory.create()
 
@@ -49,6 +56,9 @@ class Controller(events: Events, gameFactory: GameFactory) {
         }
         events.heartbeatNotification.subscribe {
             state.heartbeat()
+        }
+        events.gameOverNotification.subscribe {
+            state = OVER
         }
     }
 }
