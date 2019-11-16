@@ -12,7 +12,7 @@ import kotlin.coroutines.CoroutineContext
 class InjectorModule(
     val seed: Long = 42,//System.currentTimeMillis(),
     val events: Events = Events(),
-    val heartbeat: Heartbeat = AcceleratingHeartbeat(events, 1000, 1, createCoroutineScope())
+    val heartbeat: Heartbeat = AcceleratingHeartbeat(events, 1000, 2, createCoroutineScope())
 ) : AbstractModule() {
     companion object {
         val logger = org.apache.logging.log4j.LogManager.getLogger()

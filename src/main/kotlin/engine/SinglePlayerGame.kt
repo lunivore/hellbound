@@ -33,7 +33,7 @@ class SinglePlayerGame(
 
     override fun heartbeat() {
         var candidateTetromino = tetromino.movedDown()
-        if (candidateTetromino.any { it.isOutOfBounds(gameSize) || junk.contains(it) }) {
+        if (candidateTetromino.any { it.isOutOfBounds(gameSize) || junk.collidesWith(it) }) {
             junk = junk.plus(tetromino)
             checkForNewLine()
             nextTetromino()
@@ -44,7 +44,7 @@ class SinglePlayerGame(
     }
 
     private fun checkForGameOver() {
-        if (junk.any { tetromino.contains(it)}) {
+        if (junk.any { tetromino.collidesWith(it) }) {
             events.gameOverNotification.push(Object())
         }
     }
@@ -80,7 +80,7 @@ class SinglePlayerGame(
             PlayerMove.DROP -> drop()
             PlayerMove.UNMAPPED -> tetromino
         }
-        if (candidateTetromino.none { it.isOutOfBounds(gameSize)  || junk.contains(it) }) {
+        if (candidateTetromino.none { it.isOutOfBounds(gameSize)  || junk.collidesWith(it) }) {
             tetromino = candidateTetromino
             events.gridChangedNotification.push(tetromino.plus(junk))
         }
@@ -89,7 +89,7 @@ class SinglePlayerGame(
     private fun drop(): Tetromino {
         var currentTetromino = tetromino
         var candidateTetromino = currentTetromino.movedDown()
-        while (candidateTetromino.none { it.isOutOfBounds(gameSize) || junk.contains(it) }) {
+        while (candidateTetromino.none { it.isOutOfBounds(gameSize) || junk.collidesWith(it) }) {
             currentTetromino = candidateTetromino
             candidateTetromino = candidateTetromino.movedDown()
         }

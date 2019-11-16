@@ -14,8 +14,7 @@ private fun rotation(x1: Int, y1: Int, x2: Int, y2: Int, x3: Int, y3: Int, x4: I
     )
 }
 
-private fun p(x: Int, y: Int): Segment { return Segment(x, y)
-}
+private fun p(x: Int, y: Int): Position { return Position(x, y)}
 
 enum class TetrominoType(val tetrominoRotations: List<TetrominoRotation>, val ascii: Char) : List<TetrominoRotation> by tetrominoRotations {
 
@@ -79,16 +78,14 @@ enum class TetrominoType(val tetrominoRotations: List<TetrominoRotation>, val as
         'S');
 }
 
-data class TetrominoRotation(val segments : List<Segment>) : List<Segment> by segments {
-    fun movedTo(center: Position): List<Segment> = map {
-        it.movedRight(center.col).movedDown(center.row)
+data class TetrominoRotation(val positions : List<Position>) : List<Position> by positions {
+    fun centerTetrominoAt(center: Position, ascii: Char): List<Segment> {
+        return positions.map { Segment(it, ascii).movedRight(center.col).movedDown(center.row) }
     }
-
 }
 
-
 data class Tetromino(val type : TetrominoType, val center : Position, val rotation : Int = 0) :
-    List<Segment> by type[rotation].movedTo(center) {
+    List<Segment> by type[rotation].centerTetrominoAt(center, type.ascii) {
 
     fun movedRight(): Tetromino = copy(center = center.right)
     fun movedLeft(): Tetromino = copy(center = center.left)
@@ -96,3 +93,5 @@ data class Tetromino(val type : TetrominoType, val center : Position, val rotati
     fun turnedClockwise(): Tetromino = copy(rotation = (rotation + 3)%4)
     fun turnedWiddershins(): Tetromino = copy(rotation = (rotation + 1)%4)
 }
+
+fun List<Segment>.collidesWith(segment : Segment) = map {it.position}.contains(segment.position)

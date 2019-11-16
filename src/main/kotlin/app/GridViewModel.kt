@@ -16,6 +16,18 @@ class   GridViewModel : ViewModel() {
     val squares: ObservableList<Square> =
         FXCollections.observableArrayList()
 
+    companion object {
+        val TYPES_TO_COLOR = mapOf(
+            'O' to Color.RED,
+            'I' to Color.ORANGERED,
+            'T' to Color.ORANGE,
+            'J' to Color.YELLOW,
+            'L' to Color.FIREBRICK,
+            'Z' to Color.CRIMSON,
+            'S' to Color.DARKRED
+        )
+    }
+
     init {
         initializeSquares(GameSize())
         events.gameReadyNotification.subscribe {
@@ -23,10 +35,13 @@ class   GridViewModel : ViewModel() {
         }
 
         events.gridChangedNotification.subscribe {
+            val segments = it
             val allPositions = it.map { it.position }
 
             squares.replaceAll {
-                val color = if (allPositions.contains(Position(it.col, it.row))) Color.RED else Color.BLACK
+                val position = Position(it.col, it.row)
+                val matchingSegment = segments.firstOrNull { it.position == position }
+                val color = if (matchingSegment != null) TYPES_TO_COLOR[matchingSegment.type]!! else Color.BLACK
                 Square(it.col, it.row, scale.value, color)
             }
         }
