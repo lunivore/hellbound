@@ -24,6 +24,7 @@ class SinglePlayerGame(
     private val seed: Long = System.currentTimeMillis()
 ) : Game {
 
+    private var score: Int = 0
     private var junk = listOf<Segment>()
 
     private val random = Random(seed)
@@ -34,6 +35,7 @@ class SinglePlayerGame(
     override fun heartbeat() {
         var candidateTetromino = tetromino.movedDown()
         if (candidateTetromino.any { it.isOutOfBounds(gameSize) || junk.collidesWith(it) }) {
+            score = score + 10
             junk = junk.plus(tetromino)
             checkForNewLine()
             nextTetromino()
@@ -53,6 +55,7 @@ class SinglePlayerGame(
         val junkLines = junk.groupBy { it.position.row }.values
         val rowsToDelete : List<Int> = junkLines.filter { it.size > gameSize.cols }.map { it.first().row }.sorted()
         for(line in rowsToDelete) {
+            score = score + 100
             val aboveLine = junk.filter { it.position.row < line } // Remembering 0 is at the top
             val belowLine = junk.filter { it.position.row > line }
             junk = aboveLine.map {it.movedDown()}.plus(belowLine)
@@ -60,14 +63,18 @@ class SinglePlayerGame(
     }
 
     override fun startPlaying() {
+        score = 0
+        junk = listOf()
         tetromino = Tetromino(nextType, translation)
         events.gridChangedNotification.push(tetromino)
+        events.scoreChangedNotification.push(score)
     }
 
     private fun nextTetromino() {
         nextType = TetrominoType.values()[random.nextInt(TetrominoType.values().size)]
         tetromino = Tetromino(nextType, translation)
         events.gridChangedNotification.push(tetromino.plus(junk))
+        events.scoreChangedNotification.push(score)
     }
 
     override fun move(move: PlayerMove) {

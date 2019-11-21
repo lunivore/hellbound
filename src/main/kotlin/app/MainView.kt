@@ -1,5 +1,6 @@
 package com.lunivore.hellbound.app
 
+import OverylayView
 import com.lunivore.hellbound.Events
 import com.lunivore.hellbound.com.lunivore.hellbound.app.GameView
 import com.lunivore.hellbound.com.lunivore.hellbound.app.WelcomeView
@@ -15,6 +16,7 @@ class MainView : View() {
     val keycodeTranslator : KeycodeTranslator by di()
 
     private val gameView = find(GameView::class)
+    private val overlayView = find(OverylayView::class)
     private val frontView = find(WelcomeView::class)
 
 
@@ -27,7 +29,15 @@ class MainView : View() {
         title = "Hellbound!"
         events.gameReadyNotification.subscribe {
             frontView.root.toBack()
+            overlayView.root.requestFocus()
+        }
+        events.gamePlayingNotification.subscribe {
+            overlayView.root.toBack()
             gameView.root.requestFocus()
+        }
+        events.gameOverNotification.subscribe {
+            overlayView.root.toFront()
+            overlayView.root.requestFocus()
         }
         events.showWelcomeNotification.subscribe {
             frontView.root.toFront()
@@ -38,6 +48,7 @@ class MainView : View() {
     override val root = stackpane {
         addEventFilter(KeyEvent.KEY_PRESSED) { events.playerMoveRequest.push(keycodeTranslator.translate(it.code)) }
         children.add(gameView.root)
+        children.add(overlayView.root)
         children.add(frontView.root)
     }
 }

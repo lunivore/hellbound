@@ -4,6 +4,7 @@ import com.lunivore.hellbound.Events
 import com.lunivore.hellbound.model.GameSize
 import com.lunivore.hellbound.model.Position
 import com.lunivore.hellbound.model.Scale
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.paint.Color
@@ -15,6 +16,7 @@ class   GridViewModel : ViewModel() {
     val scale : Scale by di()
     val squares: ObservableList<Square> =
         FXCollections.observableArrayList()
+    var score = SimpleIntegerProperty()
 
     companion object {
         val TYPES_TO_COLOR = mapOf(
@@ -44,6 +46,10 @@ class   GridViewModel : ViewModel() {
                 val color = if (matchingSegment != null) TYPES_TO_COLOR[matchingSegment.type]!! else Color.BLACK
                 Square(it.col, it.row, scale.value, color)
             }
+        }
+
+        events.scoreChangedNotification.subscribe {
+            score.set(it)
         }
     }
 
