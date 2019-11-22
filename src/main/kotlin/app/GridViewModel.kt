@@ -44,7 +44,7 @@ class   GridViewModel : ViewModel() {
                 val position = Position(it.col, it.row)
                 val matchingSegment = segments.firstOrNull { it.position == position }
                 val color = if (matchingSegment != null) TYPES_TO_COLOR[matchingSegment.type]!! else Color.BLACK
-                Square(it.col, it.row, scale.value, color)
+                Square(it.col, it.row, scale.value, color, matchingSegment?.type)
             }
         }
 
@@ -57,7 +57,7 @@ class   GridViewModel : ViewModel() {
         squares.clear()
         for (rowi in 0..it.rows) {
             for (coli in 0..it.cols) {
-                squares.add(Square(coli, rowi, scale.value, Color.BLACK))
+                squares.add(Square(coli, rowi, scale.value, Color.BLACK, null))
             }
         }
     }
