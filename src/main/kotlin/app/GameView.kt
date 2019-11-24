@@ -8,7 +8,6 @@ import javafx.scene.paint.Color
 import javafx.scene.paint.CycleMethod
 import javafx.scene.paint.RadialGradient
 import javafx.scene.paint.Stop
-import javafx.scene.shape.StrokeType
 import javafx.scene.text.Font
 import tornadofx.*
 
@@ -26,14 +25,16 @@ class GameView : View() {
                     bindChildren(gridVM.squares) {
                         rectangle(it.x, it.y, it.scale, it.scale) {
                             if (it.isEmpty) {
-                                val stops = listOf(Stop(0.5, it.color), Stop(1.0, Color.DARKGRAY))
+                                val stops = listOf(Stop(0.6, it.color), Stop(1.0, Color.DARKGRAY))
                                 val radial = RadialGradient(0.0, 0.0, 0.5, 0.5, 1.0, true, CycleMethod.NO_CYCLE, stops)
                                 fill = radial
                             } else {
-                                fill = it.color
-                                stroke = it.color.brighter()
-                                strokeType = StrokeType.INSIDE
-                                strokeWidth = 4.0
+                                val stops = listOf(Stop(0.3, it.color), Stop(1.0, Color.WHITE))
+                                val radial = RadialGradient(0.0, 0.0, 0.5, 0.5, 1.0, true, CycleMethod.NO_CYCLE, stops)
+                                fill = radial
+                                arcWidth = it.scale/2.0
+                                arcHeight = it.scale/2.0
+                                background = Background(BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY))
                             }
                         }
                     }
