@@ -1,4 +1,4 @@
-package com.lunivore.hellbound.com.lunivore.hellbound.app
+package com.lunivore.hellbound.app
 
 import com.lunivore.hellbound.Events
 import com.lunivore.hellbound.model.GameSize
