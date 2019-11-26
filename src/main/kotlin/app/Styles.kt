@@ -5,7 +5,10 @@ import javafx.scene.paint.CycleMethod
 import javafx.scene.paint.RadialGradient
 import javafx.scene.paint.Stop
 import javafx.scene.shape.StrokeType
-import tornadofx.*
+import tornadofx.CssSelectionBlock
+import tornadofx.Dimension
+import tornadofx.Stylesheet
+import tornadofx.cssclass
 
 class Styles : Stylesheet() {
     companion object {
