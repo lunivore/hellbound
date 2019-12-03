@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="hellbound" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="lunivore.com" external.system.module.version="0.0.3-20170516" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="apk" name="APK">
+      <configuration>
+        <option name="APK_PATH" />
+        <option name="APP_PACKAGE" />
+        <option name="SETUP_ISSUES">
+          <list />
+        </option>
+        <option name="NATIVE_LIBRARIES">
+          <list />
+        </option>
+        <option name="JAVA_SOURCE_FOLDER_PATHS">
+          <set />
+        </option>
+      </configuration>
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">

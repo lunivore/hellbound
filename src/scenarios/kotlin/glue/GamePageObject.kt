@@ -1,12 +1,15 @@
 package com.lunivore.hellbound.glue
 
 import com.lunivore.stirry.Stirry
+import com.lunivore.stirry.find
+import com.lunivore.stirry.fireAndStir
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.containsSubstring
 import javafx.application.Platform
 import javafx.scene.Group
 import javafx.scene.control.Button
 import javafx.scene.control.Label
+import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.BorderPane
 import kotlinx.coroutines.delay
@@ -36,24 +39,43 @@ class GamePageObject(private val world: World, private val keyPressPageObject: K
         return keyPressPageObject.presses_the_sequence(sequenceOfMoves.trimIndent())
     }
 
-    fun and_the_current_shape(sequenceOfMoves: String) {
-        with_existing_play(sequenceOfMoves)
-    }
-
-    fun which_is_above_the_high_scores(): GamePageObject {
-        TODO()
+    fun which_is_above_the_high_scores() : GamePageObject {
+        thats_just_started()
+        keyPressPageObject.presses_the_sequence("""
+            EEDDDD h
+            EDDD h
+            EDDDDD h
+            D h
+            E h
+            QAAA h
+            QAAAA h
+            QD h
+            QAAA h
+        """)
+        return this
     }
 
     fun and_with_a_play(): GamePageObject {
-        TODO()
+        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
+
+        (1..9).forEach {
+            Platform.runLater { world.events.heartbeatNotification.push(Object()) }
+            pressKey(gameView, KeyCode.SPACE)
+        }
+        return this
     }
 
     fun that_is_about_to_lose() {
-        TODO()
+        // Deliberately empty; just descriptive
     }
 
     fun should_prompt_for_the_player_name() {
-        TODO()
+        val dialog = Stirry.findModalDialog()
+        val playerNameField = dialog.find<TextField> { true }.value
+        Stirry.runOnPlatform { playerNameField.text = "Luni" }
+        runBlocking { delay(1000) }
+        dialog.find<Button>({it.isDefaultButton}).value.fireAndStir()
+
     }
 
     fun that_is_new() {

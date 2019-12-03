@@ -3,14 +3,11 @@ package com.lunivore.hellbound.glue
 import com.lunivore.stirry.Stirry
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import javafx.geometry.Insets
 import javafx.scene.Group
-import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
 import javafx.scene.paint.Paint
 import javafx.scene.paint.RadialGradient
 import javafx.scene.shape.Rectangle
-import tornadofx.asBackground
 
 
 class GridPageObject(world: World) {

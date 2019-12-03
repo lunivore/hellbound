@@ -1,6 +1,7 @@
 package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.Events
+import com.lunivore.hellbound.model.HighScore
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.greaterThan
@@ -50,7 +51,7 @@ class HeartbeatTest {
 
         // When we start a new game, then stop it
         events.gamePlayingNotification.push(Object())
-        events.gameOverNotification.push(Object())
+        events.gameOverNotification.push(HighScore(10))
 
 
         // Then we should not hear more heartbeats

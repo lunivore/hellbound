@@ -1,13 +1,10 @@
 package com.lunivore.hellbound
 
-import com.lunivore.hellbound.model.GameSize
-import com.lunivore.hellbound.model.PlayerMove
-import com.lunivore.hellbound.model.Segment
+import com.lunivore.hellbound.model.*
 import org.apache.logging.log4j.LogManager
 import org.reactfx.EventSource
 
 class Events {
-
 
     val logger = LogManager.getLogger()
 
@@ -18,12 +15,15 @@ class Events {
     val gameReadyNotification = EventSource<GameSize>()
     val playerMoveRequest = EventSource<PlayerMove>()
     val heartbeatNotification = EventSource<Any>()
-    val gameOverNotification = EventSource<Any>()
+    val gameOverNotification = EventSource<HighScore>()
     val showWelcomeRequest = EventSource<Any>()
     val showWelcomeNotification = EventSource<Any>()
     val scoreChangedNotification = EventSource<Int>()
+    val highScoreAchievedNotification = EventSource<HighScore>()
+    val highScoreRecordRequest = EventSource<RecordedHighScore>()
+    val highScoresChangedNotification = EventSource<List<RecordedHighScore>>()
 
-    init {
+            init {
         gridChangedNotification.subscribe { logger.info("Notification: Grid changed") }
         gamePlayingNotification.subscribe { logger.info("Notification: Game playing") }
         gameReadyRequest.subscribe { logger.info("Request: Game ready") }
