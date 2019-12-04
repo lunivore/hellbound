@@ -5,32 +5,37 @@ import com.lunivore.hellbound.com.lunivore.hellbound.app.FrontView
 import com.lunivore.hellbound.com.lunivore.hellbound.app.GameView
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
-import tornadofx.View
-import tornadofx.singleAssign
-import tornadofx.tab
-import tornadofx.tabpane
+import javafx.scene.input.KeyEvent
+import org.apache.logging.log4j.LogManager
+import tornadofx.*
 
 class MainView : View() {
 
     val events : Events by di()
+    val keycodeTranslator : KeycodeTranslator by di()
 
-    init {
-        title = "Hellbound!"
-        events.gameStartNotification.subscribe { gameTabPane.selectionModel.select(gameTab)}
+    private val gameView = find(GameView::class)
+    private val frontView = find(FrontView::class)
+
+
+    companion object {
+        val logger = LogManager.getLogger()
     }
 
-    private var gameTabPane : TabPane by singleAssign()
-    private var gameTab : Tab by singleAssign()
-
-    private val frontView = find(FrontView::class)
-    private val gameView = find(GameView::class)
-
-    override val root = tabpane {
-        gameTabPane = this
-        tab {content = frontView.root}
-        tab {
-            gameTab = this
-            content = gameView.root
+    init {
+        logger.info("Constructing main view")
+        title = "Hellbound!"
+        events.gameReadyNotification.subscribe {
+            frontView.root.toBack()
+            gameView.root.requestFocus()
         }
+
+
+    }
+
+    override val root = stackpane {
+        addEventFilter(KeyEvent.KEY_PRESSED) { events.playerMoveRequest.push(keycodeTranslator.translate(it.code)) }
+        children.add(gameView.root)
+        children.add(frontView.root)
     }
 }
