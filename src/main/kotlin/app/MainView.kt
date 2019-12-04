@@ -1,88 +1,36 @@
 package com.lunivore.hellbound.app
 
-import javafx.scene.layout.HBox
-import tornadofx.View
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
-import javafx.geometry.Pos
+import com.lunivore.hellbound.Events
+import com.lunivore.hellbound.com.lunivore.hellbound.app.FrontView
+import com.lunivore.hellbound.com.lunivore.hellbound.app.GameView
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
-import javafx.scene.paint.Color
-import tornadofx.*
-import java.util.*
+import tornadofx.View
+import tornadofx.singleAssign
+import tornadofx.tab
+import tornadofx.tabpane
 
 class MainView : View() {
 
-    private val gridVM = GridViewModel()
+    val events : Events by di()
 
     init {
         title = "Hellbound!"
+        events.gameStartNotification.subscribe { gameTabPane.selectionModel.select(gameTab)}
     }
 
     private var gameTabPane : TabPane by singleAssign()
     private var gameTab : Tab by singleAssign()
 
+    private val frontView = find(FrontView::class)
+    private val gameView = find(GameView::class)
+
     override val root = tabpane {
         gameTabPane = this
-        tab {
-            borderpane() {
-                center {
-                    vbox {
-                        alignment = Pos.CENTER
-                        label("Welcome to Hellbound!")
-                        button("New Game") {
-                            action {
-                                gameTabPane.selectionModel.select(gameTab)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        tab {content = frontView.root}
         tab {
             gameTab = this
-            borderpane() {
-                top {
-                    hbox {
-                        label {
-                            text = "SCORE:"
-                        }
-                    }
-                }
-                center {
-                    stackpane {
-                        group {
-                            bindChildren(gridVM.squares) {
-                                rectangle(it.x, it.y, it.scale, it.scale) {
-                                    fill = it.color
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            content = gameView.root
         }
     }
 }
-
-class   GridViewModel {
-    private val gridHeight: Int = 20
-    private val gridWidth: Int = 10
-    private val gridScale: Double = 40.0
-    val squares: ObservableList<Square> = FXCollections.observableArrayList()
-
-    init {
-        val random = Random(System.currentTimeMillis())
-        for (coli in 0..gridWidth) {
-            for (rowi in 0..gridHeight) {
-                squares.add(Square(coli, rowi, gridScale, listOf(Color.BLACK, Color.BLUE, Color.RED, Color.YELLOW)[random.nextInt(4)]))
-            }
-        }
-    }
-}
-
-data class Square(val col : Int, val row : Int, val scale : Double, val color : Color) {
-    val x = col * scale
-    val y = row * scale
-}
-
