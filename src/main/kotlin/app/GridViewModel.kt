@@ -1,9 +1,10 @@
 package com.lunivore.hellbound.app
 
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.engine.glyph.Segment
 import com.lunivore.hellbound.model.GameSize
+import com.lunivore.hellbound.model.Position
 import com.lunivore.hellbound.model.Scale
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.paint.Color
@@ -15,6 +16,19 @@ class   GridViewModel : ViewModel() {
     val scale : Scale by di()
     val squares: ObservableList<Square> =
         FXCollections.observableArrayList()
+    var score = SimpleIntegerProperty()
+
+    companion object {
+        val TYPES_TO_COLOR = mapOf(
+            'O' to Color.RED,
+            'I' to Color.ORANGERED,
+            'T' to Color.ORANGE,
+            'J' to Color.YELLOW,
+            'L' to Color.FIREBRICK,
+            'Z' to Color.CRIMSON,
+            'S' to Color.DARKRED
+        )
+    }
 
     init {
         initializeSquares(GameSize())
@@ -23,12 +37,19 @@ class   GridViewModel : ViewModel() {
         }
 
         events.gridChangedNotification.subscribe {
-            val allSegments = it.flatMap { it }
+            val segments = it
+            val allPositions = it.map { it.position }
 
             squares.replaceAll {
-                val color = if (allSegments.contains(Segment(it.col, it.row))) Color.RED else Color.BLACK
-                Square(it.col, it.row, scale.value, color)
+                val position = Position(it.col, it.row)
+                val matchingSegment = segments.firstOrNull { it.position == position }
+                val color = if (matchingSegment != null) TYPES_TO_COLOR[matchingSegment.type]!! else Color.BLACK
+                Square(it.col, it.row, scale.value, color, matchingSegment?.type)
             }
+        }
+
+        events.scoreChangedNotification.subscribe {
+            score.set(it)
         }
     }
 
@@ -36,7 +57,7 @@ class   GridViewModel : ViewModel() {
         squares.clear()
         for (rowi in 0..it.rows) {
             for (coli in 0..it.cols) {
-                squares.add(Square(coli, rowi, scale.value, Color.BLACK))
+                squares.add(Square(coli, rowi, scale.value, Color.BLACK, null))
             }
         }
     }

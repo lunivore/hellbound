@@ -8,6 +8,7 @@ interface State {
     fun getReady(size: GameSize)
     fun move(playerMove: PlayerMove)
     fun heartbeat()
+    fun welcome()
 }
 
 abstract class DefaultState() : State {
@@ -18,6 +19,7 @@ abstract class DefaultState() : State {
     override fun getReady(size: GameSize) {}
     override fun move(playerMove: PlayerMove) {}
     override fun heartbeat() {}
+    override fun welcome() {}
 }
 
 

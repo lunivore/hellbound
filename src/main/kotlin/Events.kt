@@ -1,17 +1,17 @@
 package com.lunivore.hellbound
 
-import com.lunivore.hellbound.engine.glyph.Tetromino
 import com.lunivore.hellbound.model.GameSize
 import com.lunivore.hellbound.model.PlayerMove
+import com.lunivore.hellbound.model.Segment
 import org.apache.logging.log4j.LogManager
 import org.reactfx.EventSource
 
 class Events {
 
+
     val logger = LogManager.getLogger()
 
-
-    val gridChangedNotification = EventSource<List<Tetromino>>()
+    val gridChangedNotification = EventSource<List<Segment>>()
 
     val gamePlayingNotification = EventSource<Any>()
     val gameReadyRequest = EventSource<GameSize>()
@@ -19,6 +19,9 @@ class Events {
     val playerMoveRequest = EventSource<PlayerMove>()
     val heartbeatNotification = EventSource<Any>()
     val gameOverNotification = EventSource<Any>()
+    val showWelcomeRequest = EventSource<Any>()
+    val showWelcomeNotification = EventSource<Any>()
+    val scoreChangedNotification = EventSource<Int>()
 
     init {
         gridChangedNotification.subscribe { logger.info("Notification: Grid changed") }
@@ -28,5 +31,8 @@ class Events {
         playerMoveRequest.subscribe { logger.info("Request: Player move - ${it.name}") }
         heartbeatNotification.subscribe { logger.info("Notification: Heartbeat") }
         gameOverNotification.subscribe { logger.info("Notification: Game over") }
+        showWelcomeRequest.subscribe { logger.info("Request: Return to Welcome screen") }
+        showWelcomeNotification.subscribe { logger.info("Notification: Returning to Welcome screen") }
+        scoreChangedNotification.subscribe { logger.info("Score: $it") }
     }
 }

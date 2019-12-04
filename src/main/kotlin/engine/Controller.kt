@@ -38,17 +38,26 @@ class Controller(events: Events, gameFactory: GameFactory) {
         }
     }
 
+    var OVER: State = object : DefaultState() {
+        override fun welcome() {
+            events.showWelcomeNotification.push(Object())
+            state = WELCOME
+        }
+        override fun getReady(size: GameSize) {
+            events.gameReadyNotification.push(size)
+            state = READY
+        }
+    }
+
     private var state = WELCOME
     private var game: Game = gameFactory.create()
 
     init {
         logger.info("Initializing controller")
         events.gameReadyRequest.subscribe {state.getReady(it)}
-        events.playerMoveRequest.subscribe {
-            state.move(it)
-        }
-        events.heartbeatNotification.subscribe {
-            state.heartbeat()
-        }
+        events.playerMoveRequest.subscribe {state.move(it)}
+        events.heartbeatNotification.subscribe {state.heartbeat()}
+        events.gameOverNotification.subscribe {state = OVER}
+        events.showWelcomeRequest.subscribe {state.welcome()}
     }
 }
