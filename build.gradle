@@ -2,18 +2,16 @@ group 'lunivore.com'
 version '0.0.3-20170516'
 
 buildscript {
-    ext.kotlinVersion = '1.1.2'
+    ext.kotlinVersion = '1.3.41'
+    ext.coroutinesVersion = '1.3.2'
     ext.junitVersion  = '4.12'
     ext.log4jVersion = '2.8.2'
     ext.mockitoVersion = '1.10.19'
     ext.reactFxVersion = '1.4.1'
     ext.tornadoFxVersion = '1.7.10'
     ext.guiceVersion = '4.0'
-    ext.openCsvVersion = '3.9'
     ext.stirryVersion = '0.2.1-20170825'
-    ext.cucumberJava8Version = '2.0.0-SNAPSHOT'
-    ext.cucumberPicocontainerVersion = '2.0.0-SNAPSHOT'
-    ext.cucumberJUnitVersion = '2.0.0-SNAPSHOT'
+    ext.hamkrestVersion = '1.7.0.0'
 
     repositories {
         mavenCentral()
@@ -25,8 +23,6 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -78,29 +74,32 @@ compileKotlin {
 dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile "com.opencsv:opencsv:$openCsvVersion"
     compile "org.reactfx:reactfx:$reactFxVersion"
     compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
     compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
     compile "no.tornado:tornadofx:$tornadoFxVersion"
     compile "com.google.inject:guice:$guiceVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
 
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-all:$mockitoVersion"
+    testCompile "com.natpryce:hamkrest:$hamkrestVersion"
+    testCompile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     testRuntime "junit:junit:$junitVersion"
 
     scenariosCompile "junit:junit:$junitVersion"
+    scenariosCompile "org.mockito:mockito-all:$mockitoVersion"
+    scenariosCompile "com.natpryce:hamkrest:$hamkrestVersion"
     scenariosCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    scenariosCompile "com.opencsv:opencsv:$openCsvVersion"
     scenariosCompile "org.reactfx:reactfx:$reactFxVersion"
     scenariosCompile "com.lunivore.stirry:stirry:$stirryVersion"
-    scenariosCompile "io.cucumber:cucumber-junit:$cucumberJUnitVersion"
-    scenariosCompile "io.cucumber:cucumber-java8:$cucumberJava8Version"
-    scenariosCompile "io.cucumber:cucumber-picocontainer:$cucumberPicocontainerVersion"
     scenariosCompile "org.apache.logging.log4j:log4j-api:$log4jVersion"
     scenariosCompile "org.apache.logging.log4j:log4j-core:$log4jVersion"
     scenariosCompile "no.tornado:tornadofx:$tornadoFxVersion"
     scenariosCompile "com.google.inject:guice:$guiceVersion"
+    scenariosCompile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    scenariosCompile "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
 
     scenariosRuntime "junit:junit:$junitVersion"
     scenariosRuntime "com.lunivore.stirry:stirry:$stirryVersion"

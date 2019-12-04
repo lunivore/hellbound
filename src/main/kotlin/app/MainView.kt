@@ -1,9 +1,7 @@
 package com.lunivore.hellbound.app
 
-import javafx.scene.Parent
+import javafx.scene.layout.HBox
 import tornadofx.View
-import tornadofx.borderpane
-import tornadofx.hbox
 
 class MainView : View() {
 
@@ -11,9 +9,6 @@ class MainView : View() {
         title = "Hellbound!"
     }
 
-    override val root = hbox {
-            minWidth = 400.0
-            minHeight = 600.0
-        }
-
+    override val root = HBox()
 }
+
