@@ -2,8 +2,8 @@ package com.lunivore.hellbound.app
 
 import OverylayView
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.com.lunivore.hellbound.app.GameView
-import com.lunivore.hellbound.com.lunivore.hellbound.app.WelcomeView
+import com.lunivore.hellbound.app.GameView
+import com.lunivore.hellbound.app.WelcomeView
 import javafx.scene.input.KeyEvent
 import org.apache.logging.log4j.LogManager
 import tornadofx.View
