@@ -27,6 +27,7 @@ class InjectorModule(
             override fun create(): SinglePlayerGame =
                 SinglePlayerGame(events, gameSize, seed)
         }
+        val referee = HighScoreReferee(events)
 
         bind(Events::class.java).toInstance(events)
         bind(GameSize::class.java).toInstance(gameSize)
@@ -34,7 +35,7 @@ class InjectorModule(
 
         // Don't delete these unused instances! Or the garbage collector
         // will delete the engine too!
-        val controller = Controller(events, gameFactory)
+        val controller = Controller(events, gameFactory, referee)
         val heartbeat = heartbeat
     }
 }

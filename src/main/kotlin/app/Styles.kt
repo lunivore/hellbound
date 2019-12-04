@@ -19,6 +19,13 @@ class Styles : Stylesheet() {
         val jSquare by cssclass()
         val sSquare by cssclass()
         val zSquare by cssclass()
+
+        val pane by csselement("BorderPane")
+        val dialog by csselement("DialogPane")
+        val label by csselement("Label")
+        val textfield by csselement("TextField")
+        val button by csselement("Button")
+        val highScore by cssid("highScoresLabel")
     }
 
     init {
@@ -37,6 +44,48 @@ class Styles : Stylesheet() {
         jSquare { toRoundedRectangle(Color.DARKORANGE)}
         sSquare { toRoundedRectangle(Color.PALEVIOLETRED)}
         zSquare { toRoundedRectangle(Color.FIREBRICK)}
+
+        pane {
+            backgroundColor = multi(Color.BLACK)
+            fill = Color.BLACK
+        }
+        dialog {
+            backgroundColor = multi(Color.BLACK)
+            borderColor = multi(box(Color.RED), box(Color.ORANGE), box(Color.YELLOW))
+            borderInsets = multi(box(30.0.px), box(20.0.px), box(10.0.px))
+            borderRadius = multi(box(10.0.px))
+            headerPanel {
+                backgroundColor = multi(Color.BLACK)
+            }
+            content {
+                backgroundColor = multi(Color.BLACK)
+            }
+            label {
+                backgroundColor = multi(Color.BLACK)
+                fontSize = Dimension(24.0, Dimension.LinearUnits.px)
+                textFill = Color.WHITE
+                padding = box(20.0.px)
+            }
+        }
+
+        button {
+            backgroundColor = multi(Color.WHITE, Color.LIGHTGRAY, Color.DARKGRAY)
+            fontSize = Dimension(36.0, Dimension.LinearUnits.px)
+            backgroundInsets = multi(box(10.0.px))
+            backgroundRadius = multi(box(10.0.px))
+        }
+        label {
+            backgroundColor = multi(Color.BLACK)
+            fontSize = Dimension(32.0, Dimension.LinearUnits.px)
+            textFill = Color.WHITE
+            padding = box(20.0.px)
+        }
+        highScore {
+            borderColor = multi(box(Color.RED), box(Color.ORANGE), box(Color.YELLOW))
+            borderInsets = multi(box(10.0.px), box(20.0.px), box(30.0.px))
+            borderRadius = multi(box(20.0.px))
+        }
+
     }
 
     private fun CssSelectionBlock.toRoundedRectangle(color: Color?) {

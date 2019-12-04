@@ -44,6 +44,7 @@ class OverylayView : View(){
             vbox {
                 alignment = Pos.CENTER
                 label {
+                    id="overlayMessageLabel"
                     messageLabel = this
                     textAlignment = TextAlignment.CENTER
                     text = START_MESSAGE

@@ -1,53 +1,44 @@
 package com.lunivore.hellbound
 
-import com.lunivore.stirry.Stirry
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import javafx.application.Platform
-import javafx.scene.input.KeyCode
-import javafx.scene.layout.BorderPane
-import org.junit.Assert.assertTrue
+import com.lunivore.hellbound.glue.Scenario
 import org.junit.Test
 
 class CanProgressTheGame : Scenario() {
 
     @Test
     fun `The shape should move down on heartbeat`() {
-        // Given a game that's just started
-        val gameGrid = makeNewGameReady()
-        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
-        pressKey(gameView, KeyCode.R)
-
-        // When the heart beats
-        Stirry.runOnPlatform { events.heartbeatNotification.push(Object()) }
-
-        // Then the initial T-shape should be moved down
-        val expectedTopOfGrid =
-            """
+        Given_a_game.thats_just_started()
+        When_the_heart.beats()
+        Then_the_grid.should_look_like("""
             ...........
             ....XXX....
             .....X.....
-            """
-        val expectedGrid = appendEmptyGridRows(expectedTopOfGrid)
-        assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            ...........
+            """)
     }
 
     @Test
     fun `If the shape collides with the bottom or another shape it should become junk`() {
-        // Given a game that's just started
-        val gameGrid = makeNewGameReady()
-        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
-        pressKey(gameView, KeyCode.R)
-
-        // When we drop the shape, then drop the next shape
-        pressKey(gameView, KeyCode.SPACE)
-        Stirry.runOnPlatform { events.heartbeatNotification.push(Object()) }
-        pressKey(gameView, KeyCode.SPACE)
-        Stirry.runOnPlatform { events.heartbeatNotification.push(Object()) }
-
-        // Then they should fall to the bottom and the next shape should appear
-        val expectedGrid = nl +
-                """
+        Given_a_game.thats_just_started()
+        When_the_player.presses_the_sequence(" h h")
+        Then_the_grid.should_look_like("""
                 .....XX....
                 ....XX.....
                 ...........
@@ -69,21 +60,18 @@ class CanProgressTheGame : Scenario() {
                 .....XX....
                 ....XXX....
                 .....X.....
-            """.trimIndent() + nl
-        assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
+                """)
     }
 
     @Test
     fun `If the junk has a full row then it should disappear after the heartbeat`() {
-        // Given a game
-        val gameGrid = makeNewGameReady()
-        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
-        pressKey(gameView, KeyCode.R)
-
-        // In which a sequence of moves has been carried out to make a line
-        val p : (KeyCode) -> Unit = { pressKey(gameView, it) }
-        val h : () -> Unit = { Platform.runLater { events.heartbeatNotification.push(Object()) } }
-        val sequenceOfMovesToMakeALine = """
+        // This sequence leaves the grid:
+        //            ...........
+        //            .........X.
+        //            X....XX.XXX
+        //            XX.XXXXXXXX
+        //            XXXXXXXXXXX
+        Given_a_game.with_existing_play("""
             EEDDDD h
             EDDD h
             EDDDDD h
@@ -91,50 +79,11 @@ class CanProgressTheGame : Scenario() {
             E h
             QAAA h
             QAAAA 
-        """.trimIndent().replace("\n", "")
+        """)
 
-        sequenceOfMovesToMakeALine.forEach {
-            when(it) {
-                'h' -> h()
-                ' ' -> p(KeyCode.SPACE)
-                else -> p(KeyCode.valueOf(it.toString()))
-            }
-        }
-        Stirry.waitForPlatform()
+        When_the_heart.beats()
 
-        var expectedGrid = nl +
-                """
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            ...........
-            .........X.
-            X....XX.XXX
-            XX.XXXXXXXX
-            XXXXXXXXXXX
-            """.trimIndent() + nl
-        assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
-
-        // When we make a heartbeat
-        h()
-        Stirry.waitForPlatform()
-
-        // Then the grid should have removed the line and made the next shape
-        expectedGrid = nl +
-                """
+        Then_the_grid.should_look_like("""
             .....X.....
             .....X.....
             ....XX.....
@@ -156,39 +105,15 @@ class CanProgressTheGame : Scenario() {
             .........X.
             X....XX.XXX
             XX.XXXXXXXX
-            """.trimIndent() + nl
-        assertThat(convertGridToString(gameGrid), equalTo(expectedGrid))
+            """)
     }
 
     @Test
     fun `The game ends if the next piece can't be placed`() {
-        // Given we've run the sequence to the top
-        val gameGrid = makeNewGameReady()
-        val gameView = Stirry.findInRoot<BorderPane> { it.id == "gameView" }.value
-        pressKey(gameView, KeyCode.R)
 
-        (1..9).forEach {
-            Platform.runLater { events.heartbeatNotification.push(Object()) }
-            pressKey(gameView, KeyCode.SPACE)
-        }
-        Stirry.waitForPlatform()
+        Given_a_game.run_to_the_top()
+        When_the_heart.beats()
+        Then_the_game.should_be_over()
 
-        // And we're listening for the game to be over
-        var gameOver = false
-        events.gameOverNotification.subscribe { gameOver = true }
-
-        // When the heartbeat happens
-        Platform.runLater { events.heartbeatNotification.push(Object()) }
-        Stirry.waitForPlatform()
-
-        // Then the game should be over
-        assertTrue(gameOver)
-
-        // When we press any key
-        pressKey(gameView, KeyCode.R)
-
-        // Then it should put us on the overlay
-        val overlayView = Stirry.findInRoot<BorderPane> { it.id == "overlayView" }.value
-        assertTrue(overlayView.isFocused)
     }
 }

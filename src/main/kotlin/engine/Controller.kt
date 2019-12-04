@@ -2,6 +2,7 @@ package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.Events
 import com.lunivore.hellbound.model.GameSize
+import com.lunivore.hellbound.model.HighScore
 import com.lunivore.hellbound.model.PlayerMove
 import org.apache.logging.log4j.LogManager
 
@@ -9,7 +10,7 @@ interface GameFactory {
     fun create(): Game
 }
 
-class Controller(events: Events, gameFactory: GameFactory) {
+class Controller(events: Events, gameFactory: GameFactory, referee: Referee) {
     companion object {
         val logger = LogManager.getLogger()
     }
@@ -36,6 +37,10 @@ class Controller(events: Events, gameFactory: GameFactory) {
         override fun heartbeat() {
             game.heartbeat()
         }
+        override fun gameOver(finalScore: HighScore) {
+            referee.finalScoreWas(finalScore)
+            state = OVER
+        }
     }
 
     var OVER: State = object : DefaultState() {
@@ -57,7 +62,7 @@ class Controller(events: Events, gameFactory: GameFactory) {
         events.gameReadyRequest.subscribe {state.getReady(it)}
         events.playerMoveRequest.subscribe {state.move(it)}
         events.heartbeatNotification.subscribe {state.heartbeat()}
-        events.gameOverNotification.subscribe {state = OVER}
+        events.gameOverNotification.subscribe {state.gameOver(it)}
         events.showWelcomeRequest.subscribe {state.welcome()}
     }
 }

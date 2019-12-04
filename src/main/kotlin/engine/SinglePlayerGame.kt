@@ -1,10 +1,7 @@
 package com.lunivore.hellbound.engine
 
 import com.lunivore.hellbound.Events
-import com.lunivore.hellbound.model.GameSize
-import com.lunivore.hellbound.model.PlayerMove
-import com.lunivore.hellbound.model.Position
-import com.lunivore.hellbound.model.Segment
+import com.lunivore.hellbound.model.*
 import java.util.*
 
 /**
@@ -47,7 +44,7 @@ class SinglePlayerGame(
 
     private fun checkForGameOver() {
         if (junk.any { tetromino.collidesWith(it) }) {
-            events.gameOverNotification.push(Object())
+            events.gameOverNotification.push(HighScore(score))
         }
     }
 
