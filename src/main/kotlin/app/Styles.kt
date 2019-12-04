@@ -1,5 +1,5 @@
 package com.lunivore.hellbound.app
 
-import tornadofx.Stylesheet
+import tornadofx.*
 
 class Styles : Stylesheet() {}
