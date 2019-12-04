@@ -33,6 +33,9 @@ class Controller(events: Events, gameFactory: GameFactory) {
         override fun move(playerMove: PlayerMove) {
             game.move(playerMove)
         }
+        override fun heartbeat() {
+            game.heartbeat()
+        }
     }
 
     private var state = WELCOME
@@ -43,6 +46,9 @@ class Controller(events: Events, gameFactory: GameFactory) {
         events.gameReadyRequest.subscribe {state.getReady(it)}
         events.playerMoveRequest.subscribe {
             state.move(it)
+        }
+        events.heartbeatNotification.subscribe {
+            state.heartbeat()
         }
     }
 }

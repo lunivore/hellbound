@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager
 interface State {
     fun getReady(size: GameSize)
     fun move(playerMove: PlayerMove)
+    fun heartbeat()
 }
 
 abstract class DefaultState() : State {
@@ -14,9 +15,9 @@ abstract class DefaultState() : State {
         val logger = LogManager.getLogger()
     }
 
-
     override fun getReady(size: GameSize) {}
     override fun move(playerMove: PlayerMove) {}
+    override fun heartbeat() {}
 }
 
 

@@ -16,6 +16,7 @@ import java.util.*
 interface Game {
     fun startPlaying()
     fun move(direction: PlayerMove)
+    fun heartbeat()
 }
 
 class SinglePlayerGame(
@@ -24,11 +25,13 @@ class SinglePlayerGame(
     seed: Long = System.currentTimeMillis()
 ) : Game {
 
+    override fun heartbeat() {
+        move(PlayerMove.DOWN)
+    }
 
     private val random = Random(seed)
     private var nextType = TetrominoType.values()[random.nextInt(TetrominoType.values().size)]
     private lateinit var tetromino : Tetromino
-    private val rotation = 0
     private val translation = Position(gameSize.cols / 2, 0)
 
     override fun startPlaying() {
@@ -48,6 +51,4 @@ class SinglePlayerGame(
         }
         if(move != PlayerMove.UNMAPPED) events.gridChangedNotification.push(listOf(tetromino))
     }
-
-
 }

@@ -7,8 +7,7 @@ import com.lunivore.hellbound.model.Scale
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.paint.Color
-import org.apache.logging.log4j.LogManager
-import tornadofx.*
+import tornadofx.ViewModel
 
 class   GridViewModel : ViewModel() {
 

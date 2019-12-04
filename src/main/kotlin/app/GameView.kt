@@ -1,7 +1,6 @@
 package com.lunivore.hellbound.com.lunivore.hellbound.app
 
 import com.lunivore.hellbound.app.GridViewModel
-import org.apache.logging.log4j.LogManager
 import tornadofx.*
 
 class GameView : View() {
