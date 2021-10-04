@@ -2,7 +2,7 @@ group 'lunivore.com'
 version '0.0.3-20170516'
 
 buildscript {
-    ext.kotlinVersion = '1.3.41'
+    ext.kotlinVersion = '1.5.31'
     ext.coroutinesVersion = '1.3.2'
     ext.junitVersion  = '4.12'
     ext.log4jVersion = '2.8.2'
@@ -73,36 +73,32 @@ compileKotlin {
 
 dependencies {
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile "org.reactfx:reactfx:$reactFxVersion"
-    compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
-    compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
-    compile "no.tornado:tornadofx:$tornadoFxVersion"
-    compile "com.google.inject:guice:$guiceVersion"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "org.reactfx:reactfx:$reactFxVersion"
+    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    implementation "no.tornado:tornadofx:$tornadoFxVersion"
+    implementation "com.google.inject:guice:$guiceVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
 
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.mockito:mockito-all:$mockitoVersion"
-    testCompile "com.natpryce:hamkrest:$hamkrestVersion"
-    testCompile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    testRuntime "junit:junit:$junitVersion"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-all:$mockitoVersion"
+    testImplementation "com.natpryce:hamkrest:$hamkrestVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
 
-    scenariosCompile "junit:junit:$junitVersion"
-    scenariosCompile "org.mockito:mockito-all:$mockitoVersion"
-    scenariosCompile "com.natpryce:hamkrest:$hamkrestVersion"
-    scenariosCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    scenariosCompile "org.reactfx:reactfx:$reactFxVersion"
-    scenariosCompile "com.lunivore.stirry:stirry:$stirryVersion"
-    scenariosCompile "org.apache.logging.log4j:log4j-api:$log4jVersion"
-    scenariosCompile "org.apache.logging.log4j:log4j-core:$log4jVersion"
-    scenariosCompile "no.tornado:tornadofx:$tornadoFxVersion"
-    scenariosCompile "com.google.inject:guice:$guiceVersion"
-    scenariosCompile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    scenariosCompile "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
-
-    scenariosRuntime "junit:junit:$junitVersion"
-    scenariosRuntime "com.lunivore.stirry:stirry:$stirryVersion"
+    scenariosImplementation "junit:junit:$junitVersion"
+    scenariosImplementation "org.mockito:mockito-all:$mockitoVersion"
+    scenariosImplementation "com.natpryce:hamkrest:$hamkrestVersion"
+    scenariosImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    scenariosImplementation "org.reactfx:reactfx:$reactFxVersion"
+    scenariosImplementation "com.lunivore.stirry:stirry:$stirryVersion"
+    scenariosImplementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    scenariosImplementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    scenariosImplementation "no.tornado:tornadofx:$tornadoFxVersion"
+    scenariosImplementation "com.google.inject:guice:$guiceVersion"
+    scenariosImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    scenariosImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$coroutinesVersion"
 }
 
 jar {
@@ -121,6 +117,6 @@ jar {
         include 'LICENSE*.txt'
     }
     manifest {
-        attributes 'Main-Class': 'com.lunivore.montecarluni.Montecarluni'
+        attributes 'Main-Class': 'com.lunivore.hellbound.Hellbound'
     }
 }

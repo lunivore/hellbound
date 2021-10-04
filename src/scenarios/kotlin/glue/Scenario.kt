@@ -5,6 +5,7 @@ import com.lunivore.hellbound.Hellbound
 import com.lunivore.hellbound.InjectorModule
 import com.lunivore.hellbound.engine.Heartbeat
 import com.lunivore.stirry.Stirry
+import javafx.application.Platform
 import javafx.scene.layout.HBox
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -60,10 +61,6 @@ abstract class Scenario {
 
     @After
     fun `Stopping Stirry`() {
-        System.out.println("Stopping Stirry")
-        // TODO: Add this to Stirry's Stop or find out how to make this work properly in TornadoFX -
-        // singleAssign() is not using the app as its scope!
-        Stirry.stage?.scene?.root = HBox()
         Stirry.stop()
     }
 
